@@ -1,9 +1,13 @@
 import streamlit as st
 
-st.title("AI Service Desk")
+from app.ai.classifier import classify_ticket
 
-title = st.text_input("Title")
-description = st.text_area("Description")
+st.title("AI Service Management System")
 
-if st.button("Submit"):
-    st.success("Ticket Created")
+ticket = st.text_area("Describe your issue")
+
+if st.button("Submit Ticket"):
+
+    result = classify_ticket(ticket)
+
+    st.json(result)

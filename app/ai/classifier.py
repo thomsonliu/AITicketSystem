@@ -1,28 +1,20 @@
 import requests
 import json
 
+
 def classify_ticket(ticket_text):
 
     prompt = f"""
-    Classify this IT ticket.
+Return ONLY JSON.
 
-    Categories:
-    Network
-    Hardware
-    Software
-    Email
-    Security
-
-    Return JSON only.
-
-    Ticket:
-    {ticket_text}
-    """
+Ticket:
+{ticket_text}
+"""
 
     response = requests.post(
         "http://localhost:11434/api/generate",
         json={
-            "model": "llama3",
+            "model": "qwen3:8b",
             "prompt": prompt,
             "stream": False
         }
@@ -30,4 +22,11 @@ def classify_ticket(ticket_text):
 
     result = response.json()["response"]
 
-    return result
+    try:
+        return json.loads(result)
+    except:
+        return {
+            "category":"Unknown",
+            "priority":"Low",
+            "team":"Help Desk"
+        }
